@@ -70,6 +70,8 @@ function Apps ({ className = '' }: Props): React.ReactElement<Props> {
     (): Route => {
       const app = location.pathname.slice(1) || '';
 
+      console.log('app', app);
+
       return createRoutes(t).find((route) => !!(route && app.startsWith(route.name))) || NOT_FOUND;
     },
     [location, t]
@@ -142,10 +144,10 @@ function Apps ({ className = '' }: Props): React.ReactElement<Props> {
                                     to='/myStuff'
                                   />
                                   <Menu.Item
-                                    active={location.pathname === '/myStuffEther'}
+                                    active={location.pathname === '/ether'}
                                     as={NavLink}
                                     name='myStuffEther'
-                                    to='/myStuffEther'
+                                    to='/ether'
                                   />
                                   <Menu.Item
                                     active={location.pathname === '/faq'}

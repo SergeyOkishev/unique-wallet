@@ -18,7 +18,7 @@ export default function create (t: TFunction): Route {
     },
     group: 'nft',
     icon: 'users',
-    name: 'myStuffEther',
+    name: 'ether',
     text: t('nav.nftEther', 'My stuff Ether', { ns: 'apps-routing' })
   };
 }

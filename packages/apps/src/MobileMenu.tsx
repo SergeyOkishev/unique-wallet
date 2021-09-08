@@ -42,6 +42,14 @@ const MobileMenuHeader = (props: Props): React.ReactElement<Props> => {
         My stuff
       </NavLink>
       <NavLink
+        className={`menu-mobile--link ${location.pathname === '/ether' ? 'active' : ''}`}
+        exact={true}
+        strict={true}
+        to={'/myStuff'}
+      >
+        My stuff ether
+      </NavLink>
+      <NavLink
         className={`menu-mobile--link ${location.pathname === '/faq' ? 'active' : ''}`}
         exact={true}
         strict={true}
