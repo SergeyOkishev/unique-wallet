@@ -1,6 +1,7 @@
 // Copyright 2017-2021 @polkadot/apps, UseTech authors & contributors
 // SPDX-License-Identifier: Apache-2.0
 
+// eslint-disable-next-line simple-import-sort/imports
 import type { NftCollectionInterface } from '@polkadot/react-hooks/useCollection';
 import type { ErrorType } from '@polkadot/react-hooks/useFetch';
 import type { TokenDetailsInterface } from '@polkadot/react-hooks/useToken';
@@ -9,6 +10,8 @@ import BN from 'bn.js';
 import { useCallback, useEffect, useRef, useState } from 'react';
 
 import { Filters } from '@polkadot/app-nft-market/containers/NftMarket';
+import { OpenSeaAPI, OpenSeaAPIConfig } from 'opensea-js';
+
 import envConfig from '@polkadot/apps-config/envConfig';
 import { useApi, useCollection, useFetch } from '@polkadot/react-hooks';
 import { base64Decode, encodeAddress } from '@polkadot/util-crypto';
@@ -87,6 +90,24 @@ export function useCollectionsOpenSea() {
   const cleanup = useRef<boolean>(false);
   const { getDetailedCollectionInfo } = useCollection();
 
+
+  const getAssets = useCallback(async (query?: Record<string, unknown>, page?: number) => {
+ /*    if (!api || !collectionId || !ownerId) {
+      return [];
+    } */
+    const osAPIConf = openseaApi as OpenSeaAPIConfig;
+    const osAPI = new OpenSeaAPI(osAPIConf);
+
+    try
+    {
+      return await osAPI.getAssets(query, page);
+    } catch (e) {
+      console.log('getAssets error', e);
+    }
+
+ //   return [];
+  }, []);
+
   const getTokensOfCollection = useCallback(async (collectionId: string, ownerId: string) => {
     if (!api || !collectionId || !ownerId) {
       return [];
@@ -110,7 +131,7 @@ export function useCollectionsOpenSea() {
 
       // reset offers before loading first page
       if (page === 1) {
-        setOffers({});
+        setOffers({}); 
       }
 
       if (filters) {
@@ -358,6 +379,7 @@ export function useCollectionsOpenSea() {
 
   return {
     error,
+    getAssets,
     getCollectionWithTokenCount,
     getDetailedCollectionInfo,
     getHoldByMe,
