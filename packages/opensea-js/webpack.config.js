@@ -1,13 +1,18 @@
-const _ = require('lodash')
-const webpack = require('webpack')
-const path = require('path')
-const production = process.env.NODE_ENV === 'production'
+// [object Object]
+// SPDX-License-Identifier: Apache-2.0
+
+// eslint-disable-next-line header/header
+const _ = require('lodash');
+const webpack = require('webpack');
+const path = require('path');
+const production = process.env.NODE_ENV === 'production';
 
 let entry = {
-  'index': './src/index.ts'
-}
+  index: './src/index.ts'
+};
+
 if (production) {
-  entry = _.assign({}, entry, {'index.min': './src/index.ts'})
+  entry = _.assign({}, entry, { 'index.min': './src/index.ts' });
 }
 
 module.exports = {
@@ -19,8 +24,14 @@ module.exports = {
     library: 'OpenSea'
   },
   resolve: {
-    extensions: ['.ts', '.js', '.json']
+    extensions: ['.ts', '.js', '.json'],
+    fallback: {
+      http: false,
+      https: false,
+      os: false
+    }
   },
+
   devtool: 'source-map',
   plugins: [
     new webpack.optimize.UglifyJsPlugin({
@@ -49,4 +60,4 @@ module.exports = {
       }
     ]
   }
-}
+};
