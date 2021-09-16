@@ -6,6 +6,8 @@ const _ = require('lodash');
 const webpack = require('webpack');
 const path = require('path');
 const production = process.env.NODE_ENV === 'production';
+const TerserPlugin = require('terser-webpack-plugin');
+const NodePolyfillPlugin = require('node-polyfill-webpack-plugin')
 
 let entry = {
   index: './src/index.ts'
@@ -17,6 +19,7 @@ if (production) {
 
 module.exports = {
   entry,
+  mode: 'production',
   output: {
     path: path.resolve(__dirname, '_bundles'),
     filename: '[name].js',
@@ -28,36 +31,54 @@ module.exports = {
     fallback: {
       http: false,
       https: false,
-      os: false
+      os: false,
+      sream: false
     }
   },
 
   devtool: 'source-map',
+  optimization: {
+    minimize: true,
+    minimizer: [
+     new TerserPlugin({
+       terserOptions: {
+         compress: true,
+         sourceMap: true,
+       },
+     }),
+   ],
+  },
   plugins: [
-    new webpack.optimize.UglifyJsPlugin({
-      minimize: true,
-      sourceMap: true,
-      include: /\.min\.js$/
-    })
+    new NodePolyfillPlugin()
   ],
+  // plugins: [
+  //   new webpack.optimize.UglifyJsPlugin({
+  //     minimize: true,
+  //     sourceMap: true,
+  //     include: /\.min\.js$/
+  //   })
+  // ],
   module: {
     rules: [
-      {
-        test: /\.ts$/,
-        use: [
-          {
-            loader: 'awesome-typescript-loader',
-            query: {
-              declaration: false
+        /*{
+          test: /\.json$/,
+          loader: 'json-loader',
+          exclude: '/node_modules/',
+        },*/
+        {
+          test: /\.ts$/,
+          /*exclude: [
+            path.resolve(__dirname, "/node_modules/")
+          ],*/
+          use: [
+            {
+              loader: 'ts-loader',
+              options: {
+                colors: true
+              }
             }
-          }
-        ],
-        exclude: /node_modules/
-      },
-      {
-        test: /\.json$/,
-        loader: 'json-loader'
-      }
+          ],
+        }
     ]
   }
 };

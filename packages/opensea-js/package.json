@@ -39,19 +39,22 @@
   },
   "homepage": "https://docs.opensea.io/v1.0/reference",
   "dependencies": {
+    "@types/chai": "^4.2.21",
     "bignumber.js": "^4.1.0",
     "ethereumjs-abi": "git+https://github.com/stanta/ethereumjs-abi.git",
+    "ethereumjs-util": "^7.1.0",
     "fbemitter": "^2.1.1",
     "https-browserify": "^1.0.0",
     "isomorphic-unfetch": "^2.1.1",
     "json-loader": "^0.5.7",
     "lodash": "^4.17.4",
+    "node-polyfill-webpack-plugin": "^1.1.4",
     "os": "^0.1.2",
     "query-string": "^6.11.1",
     "sha3": "^2.0.7",
     "stream-http": "^3.2.0",
     "web3": "0.20.7",
-    "webpack": "3.10.0",
+    "webpack": "^5.52.1",
     "wyvern-js": "git+https://github.com/stanta/wyvern-js.git",
     "wyvern-schemas": "git+https://github.com/stanta/wyvern-schemas.git"
   },
@@ -61,7 +64,6 @@
     }
   },
   "devDependencies": {
-    "@types/chai": "4.2.9",
     "@types/ethereumjs-util": "^6.1.0",
     "@types/fbemitter": "^2.0.32",
     "@types/lodash": "^4.14.92",
@@ -73,15 +75,18 @@
     "husky": "^4.2.3",
     "mocha": "^5.2.0",
     "mocha-typescript": "^1.1.15",
+    "terser-webpack-plugin": "^5.2.4",
+    "ts-loader": "^9.2.5",
     "ts-node": "^6.1.0",
     "tslint": "^5.9.1",
     "tslint-eslint-rules": "^4.1.1",
-    "typedoc": "^0.11.1",
+    "typedoc": "^0.22.3",
     "types-bn": "^0.0.1",
     "types-ethereumjs-util": "0.0.8",
     "typescript": "^4.3.5",
     "typescript-eslint-parser": "^16.0.0",
     "web3-typescript-typings": "^0.9.3",
+    "webpack-cli": "^4.8.0",
     "xhr2-cookies": "^1.1.0"
   }
 }

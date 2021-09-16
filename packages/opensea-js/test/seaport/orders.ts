@@ -20,7 +20,7 @@ import { OpenSeaPort } from '../../src/index'
 import { Asset, Network, Order, OrderJSON, OrderSide, SaleKind, UnhashedOrder, UnsignedOrder, WyvernSchemaName } from '../../src/types'
 import { assignOrdersToSides, estimateCurrentPrice, getOrderHash, makeBigNumber, orderFromJSON } from '../../src/utils/utils'
 import { ALEX_ADDRESS, ALEX_ADDRESS_2, CATS_IN_MECHS_ID, CK_ADDRESS, CK_RINKEBY_ADDRESS, CK_RINKEBY_TOKEN_ID, CK_TOKEN_ID, CRYPTOFLOWERS_CONTRACT_ADDRESS_WITH_BUYER_FEE, CRYPTO_CRYSTAL_ADDRESS, DEVIN_ADDRESS, DIGITAL_ART_CHAIN_ADDRESS, DIGITAL_ART_CHAIN_TOKEN_ID, DISSOLUTION_TOKEN_ID, ENS_HELLO_NAME, ENS_HELLO_TOKEN_ID, ENS_RINKEBY_SHORT_NAME_OWNER, ENS_RINKEBY_TOKEN_ADDRESS, MAINNET_API_KEY, MYTHEREUM_ADDRESS, MYTHEREUM_TOKEN_ID, RINKEBY_API_KEY, WETH_ADDRESS } from '../constants'
-import * as ordersJSONFixture from '../fixtures/orders.json'
+import ordersJSONFixture from '../fixtures/orders.json'
 import { testFeesMakerOrder } from './fees'
 
 

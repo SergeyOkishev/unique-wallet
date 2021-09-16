@@ -184,7 +184,9 @@ function createWebpack (context, mode = 'production') {
       fallback: {
         crypto: require.resolve('crypto-browserify'),
         path: require.resolve('path-browserify'),
-        stream: require.resolve('stream-browserify')
+        stream: require.resolve('stream-browserify'),
+        http: false,
+        https: false
       }
     }
   };
