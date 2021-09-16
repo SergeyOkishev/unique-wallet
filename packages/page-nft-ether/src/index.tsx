@@ -13,7 +13,7 @@ import envConfig from '@polkadot/apps-config/envConfig';
 import { NftDetails } from '@polkadot/react-components';
 // local imports and components
 import { AppProps as Props } from '@polkadot/react-components/types';
-import { NftCollectionInterface } from '@polkadot/react-hooks/useCollection';
+import { NftCollectionInterface } from '@polkadot/react-hooks/useCollectionsOpenSea';
 
 import NftWallet from './containers/NftWallet';
 
