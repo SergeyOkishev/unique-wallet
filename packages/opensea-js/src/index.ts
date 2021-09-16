@@ -2,10 +2,10 @@
 // [object Object]
 // SPDX-License-Identifier: Apache-2.0
 
-import { OpenSeaAPI } from './api';
-import { OpenSeaPort } from './seaport';
-import { EventData, EventType, Network, OpenSeaAPIConfig } from './types';
-
+export { OpenSeaAPI } from './api';
+export { OpenSeaPort } from './seaport';
+export * from './types';
+ /* EventType, Network, OpenSeaAPIConfig */ 
 export { orderToJSON, orderFromJSON, WyvernProtocol } from './utils/utils';
 export {
   encodeCall,
@@ -25,14 +25,18 @@ export {
  * })
  */
 
-export {
+/* export {
   // Main SDK export:
   OpenSeaPort,
   // So the API could be used separately:
-  OpenSeaAPI,
+  OpenSeaAPI
   // Useful for serializing and deserializing orders:
   // Types to help initialize SDK and listen to events.
   // Can also be imported using e.g.
   //   import { EventType } from 'opensea-js/lib/types'
-  EventData, EventType, Network, OpenSeaAPIConfig
 };
+export  { EventData } from "./types";
+export   { OpenSeaAPIConfig } ;
+
+export { EventType, Network };
+ */

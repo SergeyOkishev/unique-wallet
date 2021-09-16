@@ -2,7 +2,7 @@ import BigNumber from 'bignumber.js'
 import { WyvernProtocol } from 'wyvern-js'
 import * as ethUtil from 'ethereumjs-util'
 import * as _ from 'lodash'
-import * as Web3 from 'web3'
+import * as Web3 from '../../node_modules/web3'
 import {
   AnnotatedFunctionABI,
   FunctionInputKind,

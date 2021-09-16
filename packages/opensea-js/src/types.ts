@@ -1,20 +1,20 @@
-import BigNumber from 'bignumber.js'
-import * as Web3 from 'web3'
-import {
-  Network,
-  HowToCall,
-  // Note: Wyvern SaleKind is wrong!
-  ECSignature,
-  Order as WyvernOrder
-} from 'wyvern-js/lib/types'
+/* eslint-disable camelcase */
+// [object Object]
+// SPDX-License-Identifier: Apache-2.0
 
-import { Token } from 'wyvern-schemas/dist/types'
+// eslint-disable-next-line header/header
+import BigNumber from 'bignumber.js';
+import * as Web3 from 'web3';
+import { ECSignature as ESsign, Network as NtWrk, Order as WyvernOrder } from 'wyvern-js/lib/types';
+import { Token } from 'wyvern-schemas/dist/types';
 
-export {
+export * from 'wyvern-js/lib/types';
+/* { ECSignature, HowToCall, Network } */
+/* export {
   Network,
   HowToCall,
   ECSignature
-}
+}; */
 
 /**
  * Events emitted by the SDK. There are five types:
@@ -33,37 +33,37 @@ export {
  */
 export enum EventType {
   // Transactions and signature requests
-  TransactionCreated = "TransactionCreated",
-  TransactionConfirmed = "TransactionConfirmed",
-  TransactionDenied = "TransactionDenied",
-  TransactionFailed = "TransactionFailed",
+  TransactionCreated = 'TransactionCreated',
+  TransactionConfirmed = 'TransactionConfirmed',
+  TransactionDenied = 'TransactionDenied',
+  TransactionFailed = 'TransactionFailed',
 
   // Pre-transaction events
-  InitializeAccount = "InitializeAccount",
-  WrapEth = "WrapEth",
-  UnwrapWeth = "UnwrapWeth",
-  ApproveCurrency = "ApproveCurrency",
-  ApproveAsset = "ApproveAsset",
-  ApproveAllAssets = "ApproveAllAssets",
-  UnapproveCurrency = "UnapproveCurrency",
+  InitializeAccount = 'InitializeAccount',
+  WrapEth = 'WrapEth',
+  UnwrapWeth = 'UnwrapWeth',
+  ApproveCurrency = 'ApproveCurrency',
+  ApproveAsset = 'ApproveAsset',
+  ApproveAllAssets = 'ApproveAllAssets',
+  UnapproveCurrency = 'UnapproveCurrency',
 
   // Basic actions: matching orders, creating orders, and cancelling orders
-  MatchOrders = "MatchOrders",
-  CancelOrder = "CancelOrder",
-  ApproveOrder = "ApproveOrder",
-  CreateOrder = "CreateOrder",
+  MatchOrders = 'MatchOrders',
+  CancelOrder = 'CancelOrder',
+  ApproveOrder = 'ApproveOrder',
+  CreateOrder = 'CreateOrder',
   // When the signature request for an order is denied
-  OrderDenied = "OrderDenied",
+  OrderDenied = 'OrderDenied',
 
   // When transferring one or more assets
-  TransferAll = "TransferAll",
-  TransferOne = "TransferOne",
+  TransferAll = 'TransferAll',
+  TransferOne = 'TransferOne',
 
   // When wrapping or unwrapping NFTs
-  WrapAssets = "WrapAssets",
-  UnwrapAssets = "UnwrapAssets",
-  LiquidateAssets = "LiquidateAssets",
-  PurchaseAssets = "PurchaseAssets",
+  WrapAssets = 'WrapAssets',
+  UnwrapAssets = 'UnwrapAssets',
+  LiquidateAssets = 'LiquidateAssets',
+  PurchaseAssets = 'PurchaseAssets',
 }
 
 /**
@@ -96,7 +96,7 @@ export interface EventData {
  * @param apiBaseUrl Optional base URL to use for the API
  */
 export interface OpenSeaAPIConfig {
-  networkName?: Network
+  networkName?: NtWrk
   apiKey?: string
   apiBaseUrl?: string
   // Sent to WyvernJS
@@ -580,7 +580,7 @@ export interface UnsignedOrder extends UnhashedOrder {
  * Orders don't need to be signed if they're pre-approved
  * with a transaction on the contract to approveOrder_
  */
-export interface Order extends UnsignedOrder, Partial<ECSignature> {
+export interface Order extends UnsignedOrder, Partial<ESsign> {
   // Read-only server-side appends
   createdTime?: BigNumber
   currentPrice?: BigNumber
@@ -600,7 +600,7 @@ export interface Order extends UnsignedOrder, Partial<ECSignature> {
  * See https://docs.opensea.io/reference#retrieving-orders for the full
  * list of API query parameters and documentation.
  */
-export interface OrderJSON extends Partial<ECSignature> {
+export interface OrderJSON extends Partial<ESsign> {
   exchange: string
   maker: string
   taker: string
