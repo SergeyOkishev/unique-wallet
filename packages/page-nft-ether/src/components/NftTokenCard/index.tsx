@@ -58,9 +58,9 @@ function NftTokenCard ({ account, canTransferTokens, collection, onHold, openTra
 
     return '';
   }, [attributes]);
-
-  const updateTokenState = useCallback(() => {
-    let tState: 'none' | 'selling' | 'onHold' = 'none';
+  // TODO - return functionality
+  const updateTokenState = useCallback(() => { 
+/*     let tState: 'none' | 'selling' | 'onHold' = 'none';
 
     if (tokensSelling.indexOf(token) !== -1) {
       tState = 'selling';
@@ -68,7 +68,7 @@ function NftTokenCard ({ account, canTransferTokens, collection, onHold, openTra
       tState = 'onHold';
     }
 
-    setTokenState(tState);
+    setTokenState(tState); */
   }, [onHold, token, tokensSelling]);
 
   useEffect(() => {
@@ -86,7 +86,7 @@ function NftTokenCard ({ account, canTransferTokens, collection, onHold, openTra
     >
       <div
         className='token-image'
-        onClick={openDetailedInformationModal.bind(null, collection.id, token)}
+        onClick={openDetailedInformationModal.bind(null, collection, token)}
       >
         { tokenUrl && (
           <Item.Image
@@ -97,13 +97,13 @@ function NftTokenCard ({ account, canTransferTokens, collection, onHold, openTra
       </div>
       <div
         className='token-info-attributes'
-        onClick={openDetailedInformationModal.bind(null, collection.id, token)}
+        onClick={openDetailedInformationModal.bind(null, collection, token)}
       >
         <div className='token-name'>
-          #{token.toString()}
+          #{token}
         </div>
         <div className='token-balance'>
-          { collection && Object.prototype.hasOwnProperty.call(collection.Mode, 'reFungible') && <span>Balance: {reFungibleBalance}</span> }
+          { /* collection && Object.prototype.hasOwnProperty.call(collection.Mode, 'reFungible') && */ <span>Balance: {reFungibleBalance}</span> }
         </div>
         <div className='token-attributes'>
           { attributes && Object.values(attributes).length > 0 && (

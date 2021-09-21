@@ -7,10 +7,10 @@ import type { ErrorType } from '@polkadot/react-hooks/useFetch';
 import type { TokenDetailsInterface } from '@polkadot/react-hooks/useToken';
 
 import BN from 'bn.js';
-import { useCallback, useEffect, useRef, useState } from 'react';
+import { useCallback, useEffect, useRef, useState, useContext } from 'react';
 
 import { Filters } from '@polkadot/app-nft-market/containers/NftMarket';
-import { OpenSeaAPI, OpenSeaAPIConfig } from 'opensea-js';
+import { OpenSeaAPI, OpenSeaAPIConfig, OpenSeaCollection } from 'opensea-js';
 
 import envConfig from '@polkadot/apps-config/envConfig';
 import { useApi, useCollection, useFetch } from '@polkadot/react-hooks';
@@ -89,6 +89,10 @@ interface TransactionCallBacks {
   onUpdate?: () => void;
 }
 
+export interface OSnftCollectionInterface extends NftCollectionInterface, OpenSeaCollection
+{
+}
+
 export function useCollectionsOpenSea() {
   const { api } = useApi();
   const { fetchData } = useFetch();
@@ -102,26 +106,42 @@ export function useCollectionsOpenSea() {
   const [tradesLoading, setTradesLoading] = useState<boolean>(false);
   const [myTrades, setMyTrades] = useState<TradeType[]>();
   const cleanup = useRef<boolean>(false);
-//  const { getDetailedCollectionInfo } = useCollection();
+  //  const { getDetailedCollectionInfo } = useCollection();
   const { queueExtrinsic } = useContext(StatusContext);
   const { hex2a } = useDecoder();
 
-
   const getAssets = useCallback(async (query?: Record<string, unknown>, page?: number) => {
- /*    if (!api || !collectionId || !ownerId) {
+  /*    if (!api || !collectionId || !ownerId) {
       return [];
     } */
     const osAPIConf = openseaApi as OpenSeaAPIConfig;
     const osAPI = new OpenSeaAPI(osAPIConf);
+    let assets;
 
     try
     {
-      return await osAPI.getAssets(query, page);
+      assets = await osAPI.getAssets(query, page);
+
+      return assets;
     } catch (e) {
       console.log('getAssets error', e);
     }
 
- //   return [];
+    //   return [];
+  }, []);
+
+  const getCollections = useCallback(async (query?: Record<string, unknown>, page?: number) => {
+    /*    if (!api || !collectionId || !ownerId) {
+         return [];
+       } */
+    const osAPIConf = openseaApi as OpenSeaAPIConfig;
+    const osAPI = new OpenSeaAPI(osAPIConf);
+
+    try {
+      return await osAPI.getCollections(query, page);
+    } catch (e) {
+      console.log('getcollections error', e);
+    }
   }, []);
 
   const getTokensOfCollection = useCallback(async (collectionId: string, ownerId: string) => {
@@ -258,6 +278,24 @@ export function useCollectionsOpenSea() {
       setHoldLoading(false);
     }
   }, [fetchData]);
+  const getDetailedCollectionInfo = useCallback(async (collectionId: string) => {
+    if (!api) {
+      return null;
+    }
+
+    try {
+      const collectionInfo = (await api.query.nft.collectionById(collectionId)).toJSON() as unknown as NftCollectionInterface;
+
+      return {
+        ...collectionInfo,
+        id: collectionId
+      };
+    } catch (e) {
+      console.log('getDetailedCollectionInfo error', e);
+    }
+
+    return {};
+  }, [api]);
 
   /**
    * Return the list of token trades
@@ -567,24 +605,6 @@ export function useCollectionsOpenSea() {
     });
   }, [api, queueExtrinsic]);
 
-  const getDetailedCollectionInfo = useCallback(async (collectionId: string) => {
-    if (!api) {
-      return null;
-    }
-
-    try {
-      const collectionInfo = (await api.query.nft.collectionById(collectionId)).toJSON() as unknown as NftCollectionInterface;
-
-      return {
-        ...collectionInfo,
-        id: collectionId
-      };
-    } catch (e) {
-      console.log('getDetailedCollectionInfo error', e);
-    }
-
-    return {};
-  }, [api]);
 
   const getCollectionOnChainSchema = useCallback((collectionInfo: NftCollectionInterface): { constSchema: ProtobufAttributeType | undefined, variableSchema: ProtobufAttributeType | undefined } => {
     const result: {
@@ -624,38 +644,39 @@ export function useCollectionsOpenSea() {
 
   return {
     getAssets,
-    getCollectionWithTokenCount,
-    getDetailedCollectionInfo,
+    getCollections,
+    // getCollectionWithTokenCount,
+    // getDetailedCollectionInfo,
     getHoldByMe,
     getOffers,
-    getTokensOfCollection,
-    getTrades,
-    holdLoading,
+    // getTokensOfCollection,
+    // getTrades,
+    // holdLoading,
     myHold,
-    myTrades,
+    // myTrades,
     offers,
-    offersCount,
-    offersLoading,
-    presetCollections,
-    presetTokensCollections,
-    trades,
-    tradesLoading, 
-    addCollectionAdmin,
-    confirmSponsorship,
-    createCollection,
-    error,
-    getCollectionAdminList,
-    getCollectionOnChainSchema,
-    getCollectionTokensCount,
-    getCreatedCollectionCount,
-    getDetailedCollectionInfo,
-    getTokensOfCollection,
-    removeCollectionAdmin,
-    removeCollectionSponsor,
-    saveConstOnChainSchema,
-    saveVariableOnChainSchema,
-    setCollectionSponsor,
-    setOffChainSchema,
-    setSchemaVersion
+    // offersCount,
+    // offersLoading,
+    presetCollections
+    // presetTokensCollections,
+    // trades,
+    // tradesLoading, 
+    // addCollectionAdmin,
+    // confirmSponsorship,
+    // createCollection,
+    // error,
+    // getCollectionAdminList,
+    // getCollectionOnChainSchema,
+    // getCollectionTokensCount,
+    // getCreatedCollectionCount,
+    // getDetailedCollectionInfo,
+    // getTokensOfCollection,
+    // removeCollectionAdmin,
+    // removeCollectionSponsor,
+    // saveConstOnChainSchema,
+    // saveVariableOnChainSchema,
+    // setCollectionSponsor,
+    // setOffChainSchema,
+    // setSchemaVersion 
   };
 }

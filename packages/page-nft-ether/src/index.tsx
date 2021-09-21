@@ -13,7 +13,7 @@ import envConfig from '@polkadot/apps-config/envConfig';
 import { NftDetails } from '@polkadot/react-components';
 // local imports and components
 import { AppProps as Props } from '@polkadot/react-components/types';
-import { NftCollectionInterface } from '@polkadot/react-hooks/useCollectionsOpenSea';
+import { NftCollectionInterface } from '@polkadot/react-hooks/useCollection';
 
 import NftWallet from './containers/NftWallet';
 
@@ -24,7 +24,7 @@ function PageNftWallet ({ account, basePath, openPanel, setOpenPanel }: Props): 
   const [shouldUpdateTokens, setShouldUpdateTokens] = useState<string>();
   const collectionsStorage: NftCollectionInterface[] = JSON.parse(localStorage.getItem('tokenCollections') || '[]') as NftCollectionInterface[];
   const [collections, setCollections] = useState<NftCollectionInterface[]>(collectionsStorage);
-
+  
   const addCollection = useCallback((collection: NftCollectionInterface) => {
     setCollections((prevCollections: NftCollectionInterface[]) => {
       let newCollections = [...prevCollections];

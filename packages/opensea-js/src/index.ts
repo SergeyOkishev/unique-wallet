@@ -4,8 +4,8 @@
 
 export { OpenSeaAPI } from './api';
 export { OpenSeaPort } from './seaport';
-export * from './types';
- /* EventType, Network, OpenSeaAPIConfig */ 
+export *  from './types';
+ /* { OpenSeaCollection, OpenSeaAsset, EventType, Network, OpenSeaAPIConfig}  */ 
 export { orderToJSON, orderFromJSON, WyvernProtocol } from './utils/utils';
 export {
   encodeCall,

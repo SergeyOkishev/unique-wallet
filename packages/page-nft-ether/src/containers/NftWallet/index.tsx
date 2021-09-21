@@ -12,9 +12,11 @@ import envConfig from '@polkadot/apps-config/envConfig';
 import { OpenPanelType } from '@polkadot/apps-routing/types';
 import { Table, TransferModal } from '@polkadot/react-components';
 import { useCollectionsOpenSea } from '@polkadot/react-hooks';
+import { OSnftAssets, OSnftCollectionInterface } from '@polkadot/react-hooks/useCollectionsOpenSea';
 
 import CollectionSearch from '../../components/CollectionSearch';
-import NftCollectionCard from '../../components/NftCollectionCard';
+// import NftCollectionCard from '../../components/NftCollectionCard';
+import NftTokenCard from '../../components/NftTokenCard';
 
 interface NftWalletProps {
   account?: string;
@@ -33,22 +35,27 @@ const { canAddCollections } = envConfig;
 function NftWallet ({ account, addCollection, collections, openPanel, removeCollectionFromList, setCollections, setOpenPanel, setShouldUpdateTokens, shouldUpdateTokens }: NftWalletProps): React.ReactElement {
   const [openTransfer, setOpenTransfer] = useState<{ collection: NftCollectionInterface, tokenId: string, balance: number } | null>(null);
   const [selectedCollection, setSelectedCollection] = useState<NftCollectionInterface>();
+  const [tokens, setTokens] = useState();
   const [canTransferTokens] = useState<boolean>(true);
   const [tokensSelling, setTokensSelling] = useState<{ [collectionId: string]: string[] }>({});
   const currentAccount = useRef<string | null | undefined>();
-  const { getHoldByMe, getOffers, myHold, offers, presetCollections } = useCollectionsOpenSea();
+  const { getAssets, getHoldByMe, getOffers, myHold, offers, presetCollections } = useCollectionsOpenSea();
   const cleanup = useRef<boolean>(false);
-
-  const fetchOffersForCollections = useCallback(() => {
+  const query = '';
+  const page = 1;
+  
+  const fetchOffersForCollections = useCallback( async () => {
     if (account && collections?.length) {
       // collect collections data for expander component and set filters
       const targetCollectionIds = collections.map((collection) => collection.id);
       const filters = { collectionIds: targetCollectionIds, sort: '', traitsCount: [] };
 
-      getOffers(1, 20000, filters);
-      getHoldByMe(account, 1, 20000, targetCollectionIds);
+      setTokens(await getAssets(query, page));
+      
+      // getOffers(1, 20000, filters);
+      // getHoldByMe(account, 1, 20000, targetCollectionIds);
     }
-  }, [account, collections, getHoldByMe, getOffers]);
+  }, [account, collections, getAssets, getHoldByMe, getOffers]);
 
   const filterTokensFromOffers = useCallback(() => {
     if (Object.keys(offers).length) {
@@ -133,7 +140,7 @@ function NftWallet ({ account, addCollection, collections, openPanel, removeColl
           My tokens
         </Header>
       )}
-      { canAddCollections && (
+      { /* canAddCollections && (
         <>
           <CollectionSearch
             account={account}
@@ -142,30 +149,31 @@ function NftWallet ({ account, addCollection, collections, openPanel, removeColl
           />
           <br />
         </>
-      )}
+      ) */}
       <Header as='h3'>
-        My collections
+      NFT  Tokens OpenSea
       </Header>
-      { !collections?.length && (
+      { !tokens?.assets.length > 0 && (
         <div className='empty-label'>
-          You haven`t added anything yet. Use the collection search.
+          You haven`t added anything yet. Use the token search.
         </div>
       )}
-      { collections?.length > 0 && (
+      { tokens?.assets.length > 0 && (
         <Table
           header={[]}
         >
-          { collections.map((collection) => (
-            <tr key={collection.id}>
+          { tokens.assets.map((token) => (
+            <tr key={token.openseaLink}>
               <td className='overflow'>
-                <NftCollectionCard
+                <NftTokenCard
                   account={account}
-                  canTransferTokens={canTransferTokens}
-                  collection={collection}
-                  onHold={myHold[collection.id] || []}
+        //          canTransferTokens={canTransferTokens}
+                  collection={token.collection}
+                 // onHold={myHold[collection.id] || []}
                   openTransferModal={openTransferModal}
                   removeCollection={removeCollection}
-                  tokensSelling={tokensSelling[collection.id] || []}
+                  token = {token.name}
+                //  tokensSelling={tokensSelling[collection.id] || []}
                 />
               </td>
             </tr>

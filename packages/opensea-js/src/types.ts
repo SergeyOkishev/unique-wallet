@@ -1,14 +1,15 @@
 /* eslint-disable camelcase */
-// [object Object]
+// [Record<string, unknown> Record<string, unknown>]
 // SPDX-License-Identifier: Apache-2.0
 
 // eslint-disable-next-line header/header
 import BigNumber from 'bignumber.js';
 import * as Web3 from 'web3';
-import { ECSignature as ESsign, Network as NtWrk, Order as WyvernOrder } from 'wyvern-js/lib/types';
+import { ECSignature as ESsign, HowToCall as HTCall, Network as NtWrk, Order as WyvernOrder } from 'wyvern-js/lib/types';
 import { Token } from 'wyvern-schemas/dist/types';
 
 export * from 'wyvern-js/lib/types';
+
 /* { ECSignature, HowToCall, Network } */
 /* export {
   Network,
@@ -89,7 +90,7 @@ export interface EventData {
 }
 
 /**
- * OpenSea API configuration object
+ * OpenSea API configuration Record<string, unknown>
  * @param apiKey Optional key to use for API
  * @param networkName `Network` type to use. Defaults to `Network.Main` (mainnet)
  * @param gasPrice Default gas price to send to the Wyvern Protocol
@@ -202,7 +203,7 @@ export interface WyvernBundle {
 export type WyvernAtomicMatchParameters = [string[], BigNumber[], Array<(number | BigNumber)>, string, string, string, string, string, string, Array<(number | BigNumber)>, string[]]
 
 /**
- * The OpenSea account object appended to orders, providing extra metadata, profile images and usernames
+ * The OpenSea account Record<string, unknown> appended to orders, providing extra metadata, profile images and usernames
  */
 export interface OpenSeaAccount {
   // Wallet address for this account
@@ -264,10 +265,10 @@ export interface OpenSeaAssetContract extends OpenSeaFees {
   tokenSymbol: string
   // Image for the contract
   imageUrl: string
-  // Object with stats about the contract
-  stats?: object
+  // Record<string, unknown> with stats about the contract
+  stats?: Record<string, unknown>
   // Array of trait types for the contract
-  traits?: object[]
+  traits?: Record<string, unknown>[]
   // Link to the contract's main website
   externalLink?: string
   // Link to the contract's wiki, if available
@@ -288,7 +289,7 @@ interface StringTraitStats {
  */
 export interface OpenSeaCollection extends OpenSeaFees {
   // Name of the collection
-  name: string
+  name: string // id
   // Slug, used in URL
   slug: string
   // Accounts allowed to edit this collection
@@ -301,17 +302,17 @@ export interface OpenSeaCollection extends OpenSeaFees {
   createdDate: Date,
 
   // Description of the collection
-  description: string
+  description: string // Description
   // Image for the collection
   imageUrl: string
   // Image for the collection, large
   largeImageUrl: string
   // Image for the collection when featured
   featuredImageUrl: string
-  // Object with stats about the collection
-  stats: object
+  // Record<string, unknown> with stats about the collection
+  stats: Record<string, unknown>
   // Data about displaying cards
-  displayData: object,
+  displayData: Record<string, unknown>,
   // Tokens allowed for this collection
   paymentTokens: OpenSeaFungibleToken[]
   // Address for dev fee payouts
@@ -363,7 +364,7 @@ export interface OpenSeaAsset extends Asset {
   // Link to token on dapp's site
   externalLink: string
   // Array of traits on this token
-  traits: object[],
+  traits: Record<string, unknown>[],
   // Number of times this token has been traded (sold)
   numSales: number
   // Data about the last time this token was sold
@@ -561,7 +562,7 @@ export interface UnhashedOrder extends WyvernOrder {
   feeMethod: FeeMethod
   side: OrderSide
   saleKind: SaleKind
-  howToCall: HowToCall
+  howToCall: HTCall
   quantity: BigNumber
 
   // OpenSea-specific
@@ -706,8 +707,8 @@ export type TxnCallback = (result: boolean) => void
 export interface PartialAbiDefinition {
   type: Web3.AbiType | string // Not Partial!
   name?: string
-  inputs?: object[]
-  outputs?: object[]
+  inputs?: Record<string, unknown>[]
+  outputs?: Record<string, unknown>[]
   payable?: boolean
   constant?: boolean
   anonymous?: boolean
