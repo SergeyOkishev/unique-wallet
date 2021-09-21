@@ -88,10 +88,10 @@ function NftTokenCard ({ account, canTransferTokens, collection, onHold, openTra
         className='token-image'
         onClick={openDetailedInformationModal.bind(null, collection, token)}
       >
-        { tokenUrl && (
+        { token.imagePreviewUrl && (
           <Item.Image
             size='mini'
-            src={tokenUrl}
+            src={token.imagePreviewUrl}
           />
         )}
       </div>
@@ -100,10 +100,10 @@ function NftTokenCard ({ account, canTransferTokens, collection, onHold, openTra
         onClick={openDetailedInformationModal.bind(null, collection, token)}
       >
         <div className='token-name'>
-          #{token}
+          #{token.name}
         </div>
         <div className='token-balance'>
-          { /* collection && Object.prototype.hasOwnProperty.call(collection.Mode, 'reFungible') && */ <span>Balance: {reFungibleBalance}</span> }
+          { /* collection && Object.prototype.hasOwnProperty.call(collection.Mode, 'reFungible') &&  <span>Balance: reFungibleBalance</span> */ }
         </div>
         <div className='token-attributes'>
           { attributes && Object.values(attributes).length > 0 && (

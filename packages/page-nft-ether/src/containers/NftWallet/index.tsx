@@ -172,7 +172,7 @@ function NftWallet ({ account, addCollection, collections, openPanel, removeColl
                  // onHold={myHold[collection.id] || []}
                   openTransferModal={openTransferModal}
                   removeCollection={removeCollection}
-                  token = {token.name}
+                  token = {token}
                 //  tokensSelling={tokensSelling[collection.id] || []}
                 />
               </td>
