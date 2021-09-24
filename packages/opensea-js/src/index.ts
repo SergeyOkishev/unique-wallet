@@ -1,10 +1,12 @@
 /* eslint-disable header/header */
 // [object Object]
 // SPDX-License-Identifier: Apache-2.0
+import * as  Web3  from 'web3';
 
+export { Contract } from 'web3-eth-contract';
 export { OpenSeaAPI } from './api';
 export { OpenSeaPort } from './seaport';
-export *  from './types';
+export * from './types';
  /* { OpenSeaCollection, OpenSeaAsset, EventType, Network, OpenSeaAPIConfig}  */ 
 export { orderToJSON, orderFromJSON, WyvernProtocol } from './utils/utils';
 export {
@@ -13,6 +15,9 @@ export {
   encodeDefaultCall, encodeReplacementPattern,
   AbiType
 } from './utils/schema';
+
+export { Web3 };
+
 
 /**
  * Example setup:

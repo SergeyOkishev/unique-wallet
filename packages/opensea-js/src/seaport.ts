@@ -1,3 +1,4 @@
+/* eslint-disable */
 import { BigNumber } from 'bignumber.js'
 import { isValidAddress } from 'ethereumjs-util'
 import { EventEmitter, EventSubscription } from 'fbemitter'
@@ -49,6 +50,7 @@ import {
   annotateERC20TransferABI, annotateERC721TransferABI, assignOrdersToSides, confirmTransaction, delay, estimateCurrentPrice, estimateGas, getCurrentGasPrice, getNonCompliantApprovalAddress, getOrderHash, getTransferFeeSettings, getWyvernAsset, getWyvernBundle, isContractAddress, makeBigNumber, onDeprecated, orderToJSON,
   personalSignAsync, promisifyCall, rawCall, sendRawTransaction, validateAndFormatWalletAddress
 } from './utils/utils'
+
 
 export class OpenSeaPort {
 

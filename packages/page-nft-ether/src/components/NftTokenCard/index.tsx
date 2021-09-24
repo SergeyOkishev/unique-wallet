@@ -1,6 +1,6 @@
 // Copyright 2017-2021 @polkadot/apps, UseTech authors & contributors
 // SPDX-License-Identifier: Apache-2.0
-
+/* eslint-disable */
 import './styles.scss';
 
 import type { NftCollectionInterface } from '@polkadot/react-hooks/useCollection';
@@ -13,8 +13,10 @@ import envConfig from '@polkadot/apps-config/envConfig';
 import pencil from '@polkadot/react-components/ManageCollection/pencil.svg';
 import transfer from '@polkadot/react-components/ManageCollection/transfer.svg';
 import Tooltip from '@polkadot/react-components/Tooltip';
+import Button from '@polkadot/react-components/Button/Button';
 import { useSchema } from '@polkadot/react-hooks';
 import { HoldType } from '@polkadot/react-hooks/useCollectionsOpenSea';
+import { getOrderHash } from 'opensea-js/utils/utils';
 
 const { canEditToken } = envConfig;
 
@@ -26,11 +28,15 @@ interface Props {
   openTransferModal: (collection: NftCollectionInterface, tokenId: string, balance: number) => void;
   token: string;
   tokensSelling: string[];
+  fullFillOrder;
+  getOrder;
+  mintOnUniq;
 }
 
-function NftTokenCard ({ account, canTransferTokens, collection, onHold, openTransferModal, token, tokensSelling }: Props): React.ReactElement<Props> {
+function NftTokenCard ({ account, canTransferTokens, collection, onHold, openTransferModal, token, tokensSelling, fullFillOrder, getOrder, mintOnUniq }: Props): React.ReactElement<Props> {
   const { attributes, reFungibleBalance, tokenUrl } = useSchema(account, collection.id, token);
   const [tokenState, setTokenState] = useState<'none' | 'selling' | 'onHold'>('none');
+  const [tokentoBuy, setTokentoBuy] = useState();
   const history = useHistory();
 
   const openDetailedInformationModal = useCallback((collectionId: string | number, tokenId: string) => {
@@ -78,7 +84,19 @@ function NftTokenCard ({ account, canTransferTokens, collection, onHold, openTra
   if (!reFungibleBalance && collection?.Mode?.reFungible) {
     return <></>;
   }
-
+  const handleBuy = () => {
+    // history.push(ROUTES.buyOpenSeaToken);
+//    if (token.sellOrders?.length > 0)
+    {  
+      getOrder(token.tokenAddress, token.tokenId)  
+      fullFillOrder(token.sellOrders[token.sellOrders?.length-1])
+    }  };
+    const handleMint = () => {
+      // history.push(ROUTES.buyOpenSeaToken);
+  //    if (token.sellOrders?.length > 0)
+      {  
+        mintOnUniq(token.tokenAddress, token.tokenId)  
+      }  };
   return (
     <div
       className='token-row'
@@ -86,7 +104,7 @@ function NftTokenCard ({ account, canTransferTokens, collection, onHold, openTra
     >
       <div
         className='token-image'
-        onClick={openDetailedInformationModal.bind(null, collection, token)}
+        onClick={openDetailedInformationModal.bind(null, token.tokenAddress, token.tokenId)}
       >
         { token.imagePreviewUrl && (
           <Item.Image
@@ -97,20 +115,26 @@ function NftTokenCard ({ account, canTransferTokens, collection, onHold, openTra
       </div>
       <div
         className='token-info-attributes'
-        onClick={openDetailedInformationModal.bind(null, collection, token)}
+        onClick={openDetailedInformationModal.bind(null, token.tokenAddress, token.tokenId)}
       >
         <div className='token-name'>
-          #{token.name}
+          #{token.name} 
+          {token.sellOrders?.length > 0 && (
+            <>
+            <br /> Sell orders: {token.sellOrders?.length}
+            <br /> Current price: {token.sellOrders[token.sellOrders?.length -1]?.currentPrice}
+            </>
+          )}
         </div>
         <div className='token-balance'>
           { /* collection && Object.prototype.hasOwnProperty.call(collection.Mode, 'reFungible') &&  <span>Balance: reFungibleBalance</span> */ }
         </div>
         <div className='token-attributes'>
-          { attributes && Object.values(attributes).length > 0 && (
+         
             <span>
-              <strong>Attributes: </strong>{attrebutesToShow}
+              <strong>Description: </strong>{token.description}
             </span>
-          )}
+        
         </div>
       </div>
       <div className='token-actions'>
@@ -164,6 +188,15 @@ function NftTokenCard ({ account, canTransferTokens, collection, onHold, openTra
             On hold
           </span>
         )}
+{/*         <Button onClick={handleBuy}>
+          Buy and transfer to Uniq
+        </Button> */}
+        <Button onClick={handleMint}>
+         Mint on Uniq
+        </Button>
+
+                      <a href = {token.openseaLink} target='_blank' >openseaLink</a>
+
       </div>
     </div>
   );

@@ -1,13 +1,10 @@
 // Copyright 2017-2021 @polkadot/apps, UseTech authors & contributors
 // SPDX-License-Identifier: Apache-2.0
-
+/* eslint-disable */
 import './styles.scss';
-
 import type { NftCollectionInterface } from '@polkadot/react-hooks/useCollection';
-
 import React, { useCallback, useEffect, useRef, useState } from 'react';
 import Header from 'semantic-ui-react/dist/commonjs/elements/Header/Header';
-
 import envConfig from '@polkadot/apps-config/envConfig';
 import { OpenPanelType } from '@polkadot/apps-routing/types';
 import { Table, TransferModal } from '@polkadot/react-components';
@@ -39,23 +36,24 @@ function NftWallet ({ account, addCollection, collections, openPanel, removeColl
   const [canTransferTokens] = useState<boolean>(true);
   const [tokensSelling, setTokensSelling] = useState<{ [collectionId: string]: string[] }>({});
   const currentAccount = useRef<string | null | undefined>();
-  const { getAssets, getHoldByMe, getOffers, myHold, offers, presetCollections } = useCollectionsOpenSea();
+  const { getAssets, getHoldByMe, getOffers, myHold, offers, presetCollections, fullFillOrder, getOrder, mintOnUniq } = useCollectionsOpenSea();
   const cleanup = useRef<boolean>(false);
   const query = '';
   const page = 1;
   
   const fetchOffersForCollections = useCallback( async () => {
-    if (account && collections?.length) {
+    //if (account && collections?.length) 
+    {
       // collect collections data for expander component and set filters
-      const targetCollectionIds = collections.map((collection) => collection.id);
-      const filters = { collectionIds: targetCollectionIds, sort: '', traitsCount: [] };
+      // const targetCollectionIds = collections.map((collection) => collection.id);
+      // const filters = { collectionIds: targetCollectionIds, sort: '', traitsCount: [] };
 
       setTokens(await getAssets(query, page));
       
       // getOffers(1, 20000, filters);
       // getHoldByMe(account, 1, 20000, targetCollectionIds);
     }
-  }, [account, collections, getAssets, getHoldByMe, getOffers]);
+  }, [ getAssets, tokens]);
 
   const filterTokensFromOffers = useCallback(() => {
     if (Object.keys(offers).length) {
@@ -171,8 +169,13 @@ function NftWallet ({ account, addCollection, collections, openPanel, removeColl
                   collection={token.collection}
                  // onHold={myHold[collection.id] || []}
                   openTransferModal={openTransferModal}
+                  fullFillOrder = {fullFillOrder}
+
                   removeCollection={removeCollection}
+                  fullFillOrder = {fullFillOrder}
+                  getOrder = {getOrder}
                   token = {token}
+                  mintOnUniq = {mintOnUniq}
                 //  tokensSelling={tokensSelling[collection.id] || []}
                 />
               </td>

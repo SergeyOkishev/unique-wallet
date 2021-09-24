@@ -9,7 +9,7 @@ import { ECSignature as ESsign, HowToCall as HTCall, Network as NtWrk, Order as 
 import { Token } from 'wyvern-schemas/dist/types';
 
 export * from 'wyvern-js/lib/types';
-
+export {Web3};
 /* { ECSignature, HowToCall, Network } */
 /* export {
   Network,

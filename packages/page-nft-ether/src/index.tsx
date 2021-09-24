@@ -57,8 +57,8 @@ function PageNftWallet ({ account, basePath, openPanel, setOpenPanel }: Props): 
     <div className='my-tokens'>
       { !location.pathname.includes('token-details') && !location.pathname.includes('manage-') && (
         <>
-          <Header as='h1'>My Tokens in Ether</Header>
-          <Header as='h4'>Ethereum NFTs owned by me</Header>
+          <Header as='h1'>OpenSea NFTs</Header>
+          <Header as='h4'>Ethereum NFTs can be one-click transferred to Uniq! </Header>
         </>
       )}
       <Switch>

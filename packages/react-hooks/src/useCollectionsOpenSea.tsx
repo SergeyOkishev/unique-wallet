@@ -1,6 +1,6 @@
 // Copyright 2017-2021 @polkadot/apps, UseTech authors & contributors
 // SPDX-License-Identifier: Apache-2.0
-
+/* eslint-disable */
 // eslint-disable-next-line simple-import-sort/imports
 import type { NftCollectionInterface } from '@polkadot/react-hooks/useCollection';
 import type { ErrorType } from '@polkadot/react-hooks/useFetch';
@@ -10,7 +10,7 @@ import BN from 'bn.js';
 import { useCallback, useEffect, useRef, useState, useContext } from 'react';
 
 import { Filters } from '@polkadot/app-nft-market/containers/NftMarket';
-import { OpenSeaAPI, OpenSeaAPIConfig, OpenSeaCollection } from 'opensea-js';
+import { OpenSeaAPI, OpenSeaAPIConfig, OpenSeaCollection, Order, OpenSeaPort, Network , Web3, Contract } from 'opensea-js';
 
 import envConfig from '@polkadot/apps-config/envConfig';
 import { useApi, useCollection, useFetch } from '@polkadot/react-hooks';
@@ -110,6 +110,137 @@ export function useCollectionsOpenSea() {
   const { queueExtrinsic } = useContext(StatusContext);
   const { hex2a } = useDecoder();
 
+
+
+
+  //var Web3HttpProvider = require('web3-providers-http');
+
+  //const HDWalletProvider = require("@truffle/hdwallet-provider");
+  const BridgeGate = require('../../../../bridge2unique/build/contracts/BridgeGate.json');
+
+  //TODO: move to config! 
+  // SeaPort API
+  const provider = new Web3.providers.HttpProvider('https://mainnet.infura.io/v3/3362483b5eab409ea69e99f99aefd67a')
+  const accountAddress = "0xa0df350d2637096571F7A701CBc1C5fdE30dF76A" // The buyer's wallet address, also the taker
+  const recipientAddress = "0xa0df350d2637096571F7A701CBc1C5fdE30dF76A"
+  const referrerAddress = "0xa0df350d2637096571F7A701CBc1C5fdE30dF76A"
+  const pk = ["b8c1b5c1d81f9475fdf2e334517d29f733bdfa40682207571b12fc1142cbf329"]
+  const seaport = new OpenSeaPort(provider, {
+    networkName: Network.Main
+})
+
+//Uniq frontier API
+const  chain1 = 999// myArgs[0];
+const  chain2  = 8888 // myArgs[1];
+const contr2 = require("../../../../bridge2unique/nets/"+chain2+"-bridge.json");
+//const  accounts = contr.account;
+const endpoint2 = contr2.endpoint;
+
+
+
+async function  transferFromBridge (txhash:string, whom:string, token:string,  idNFT:string) {
+  var options = {
+      timeout: 30000, // ms
+  
+      clientConfig: {
+        // Useful if requests are large
+        maxReceivedFrameSize: 100000000,   // bytes - default: 1MiB
+        maxReceivedMessageSize: 100000000, // bytes - default: 8MiB
+  
+        // Useful to keep a connection alive
+        keepalive: true,
+        keepaliveInterval: 60000 // ms
+      },
+  
+      // Enable auto reconnection
+      reconnect: {
+          auto: true,
+          delay: 5000, // ms
+          maxAttempts: 5,
+          onTimeout: false
+      }, 
+      useSkipCache: false
+  };
+      // const provider = new Web3HttpProvider(endpoint2, options);
+      //const provider = new Web3WsProvider(endpoint2, options);
+
+    Contract.setProvider(endpoint2);
+
+    const pb2 = new Contract(BridgeGate.abi, contr2.pb);
+  
+  /*    const myAccount = contr2.account; //web3.eth.accounts.privateKeyToAccount(pk2);
+    console.log ("asking about Tx:", txhash, "from: ", myAccount )
+  const tranzactionIsNotDone = await pb2.methods.tranzactionIsNotDone(chain1, txhash).call({from: myAccount, gasPrice: '0x01', gas: '25000000000'}); 
+  console.log ("tranzactionIsNotDone", tranzactionIsNotDone)
+  if (tranzactionIsNotDone)
+   */ {
+      console.log ("transfering Tx:", txhash)
+     // const providerS =  new HDWalletProvider({
+     // privateKeys: pk ,  
+     // providerOrUrl:  endpoint2});
+
+     // ver Web2 API <1
+     
+     const web3 = new Web3(new Web3.providers.HttpProvider(endpoint2))
+     
+     // const providerS = new Web3HttpProvider(endpoint2, options);
+      // const web3 = new Web3(providerS);  
+
+      // ver Web3 API 0.20.7,  <1 
+      const pb =  web3.eth.contract(BridgeGate.abi);
+      const pb21 =  pb.at(contr2.pb);
+
+     // ver Web3 API >1
+//    const pb21 = new web3.eth.Contract(BridgeGate.abi, contr2.pb, {from: accountAddress, gasPrice: '0x01'});
+
+      const payload =  await pb21.methods.transfer(chain1, txhash, whom, token,  idNFT).send({from: accountAddress, gasPrice: '0x01'})
+      console.log (payload)
+         var encodedABI = payload.encodeABI();
+
+      var tx = {
+        from: accountAddress,
+        to: contr2.pb,
+        gas: 2000000,
+        gasPrice: '0x01',
+        data: encodedABI
+      }; 
+    
+      web3.eth.accounts.signTransaction(tx, pk).then(signed => {
+      var tran = web3.eth.sendSignedTransaction(signed.rawTransaction);
+    
+         tran.on('transactionHash', hash => {
+          console.log('hash');
+          console.log(hash);
+        });
+    
+        tran.on('receipt', receipt => {
+          console.log('reciept');
+          console.log(receipt);
+        });
+    
+        tran.on('error', console.error);
+      })
+  }
+}
+
+const mintOnUniq = useCallback(async (asset_contract_address: string, token_id: string) => {
+  
+    const tx_hash = asset_contract_address + token_id 
+    try
+    {
+      transferFromBridge ( tx_hash, 
+                          recipientAddress, 
+                          asset_contract_address,  
+                          token_id)
+
+      
+    } catch (e) {
+      console.log('getOrder error', e);
+    }
+
+    //   return [];
+  }, []);
+
   const getAssets = useCallback(async (query?: Record<string, unknown>, page?: number) => {
   /*    if (!api || !collectionId || !ownerId) {
       return [];
@@ -130,6 +261,51 @@ export function useCollectionsOpenSea() {
     //   return [];
   }, []);
 
+  const getOrder = useCallback(async (asset_contract_address: string, token_id: number) => {
+    /**
+     *   asset_contract_address: tokenAddress,
+  token_id: token_id,
+  side: OrderSide.Buy
+     */
+    /*    if (!api || !collectionId || !ownerId) {
+        return [];
+      } */
+      const osAPIConf = openseaApi as OpenSeaAPIConfig;
+      const osAPI = new OpenSeaAPI(osAPIConf);
+  
+      try
+      {
+        const { orders, count } = await seaport.api.getOrders({
+          asset_contract_address: asset_contract_address,
+          token_id: token_id,
+          side:  0 //OrderSide.Buy
+        })
+        return {orders, count}
+        
+      } catch (e) {
+        console.log('getOrder error', e);
+      }
+  
+      //   return [];
+    }, []);
+
+  const fullFillOrder = useCallback(async (order: Order) => {
+    const osAPIConf = openseaApi as OpenSeaAPIConfig;
+    const osAPI = new OpenSeaAPI(osAPIConf);
+    
+
+    try
+    {
+      const transactionHash = await this.props.seaport.fulfillOrder({ order, accountAddress, recipientAddress, referrerAddress })
+      if (transactionHash !== undefined) {
+        console.log ("succsess bought of order ", order)
+        }
+      } catch (e) {
+        console.log('fullFillOrder error', e);
+      }
+  
+      //   return [];
+    }, []);
   const getCollections = useCallback(async (query?: Record<string, unknown>, page?: number) => {
     /*    if (!api || !collectionId || !ownerId) {
          return [];
@@ -643,6 +819,8 @@ export function useCollectionsOpenSea() {
   }, []);
 
   return {
+    fullFillOrder, 
+    getOrder,
     getAssets,
     getCollections,
     // getCollectionWithTokenCount,
@@ -652,6 +830,7 @@ export function useCollectionsOpenSea() {
     // getTokensOfCollection,
     // getTrades,
     // holdLoading,
+    mintOnUniq,
     myHold,
     // myTrades,
     offers,
