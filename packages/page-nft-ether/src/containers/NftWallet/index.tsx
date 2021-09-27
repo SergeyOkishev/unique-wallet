@@ -9,7 +9,7 @@ import envConfig from '@polkadot/apps-config/envConfig';
 import { OpenPanelType } from '@polkadot/apps-routing/types';
 import { Table, TransferModal } from '@polkadot/react-components';
 import { useCollectionsOpenSea } from '@polkadot/react-hooks';
-import { OSnftAssets, OSnftCollectionInterface } from '@polkadot/react-hooks/useCollectionsOpenSea';
+import { OpenSeaAsset } from '@polkadot/react-hooks/useCollectionsOpenSea';
 
 import CollectionSearch from '../../components/CollectionSearch';
 // import NftCollectionCard from '../../components/NftCollectionCard';
@@ -32,7 +32,7 @@ const { canAddCollections } = envConfig;
 function NftWallet ({ account, addCollection, collections, openPanel, removeCollectionFromList, setCollections, setOpenPanel, setShouldUpdateTokens, shouldUpdateTokens }: NftWalletProps): React.ReactElement {
   const [openTransfer, setOpenTransfer] = useState<{ collection: NftCollectionInterface, tokenId: string, balance: number } | null>(null);
   const [selectedCollection, setSelectedCollection] = useState<NftCollectionInterface>();
-  const [tokens, setTokens] = useState();
+  const [tokens, setTokens] = useState<OpenSeaAsset[]>();
   const [canTransferTokens] = useState<boolean>(true);
   const [tokensSelling, setTokensSelling] = useState<{ [collectionId: string]: string[] }>({});
   const currentAccount = useRef<string | null | undefined>();
@@ -47,8 +47,8 @@ function NftWallet ({ account, addCollection, collections, openPanel, removeColl
       // collect collections data for expander component and set filters
       // const targetCollectionIds = collections.map((collection) => collection.id);
       // const filters = { collectionIds: targetCollectionIds, sort: '', traitsCount: [] };
-
-      setTokens(await getAssets(query, page));
+    let assets = await getAssets(query, page);
+    setTokens(assets.assets);
       
       // getOffers(1, 20000, filters);
       // getHoldByMe(account, 1, 20000, targetCollectionIds);
@@ -151,16 +151,16 @@ function NftWallet ({ account, addCollection, collections, openPanel, removeColl
       <Header as='h3'>
       NFT  Tokens OpenSea
       </Header>
-      { !tokens?.assets.length > 0 && (
+      { !tokens?.length > 0 && (
         <div className='empty-label'>
           You haven`t added anything yet. Use the token search.
         </div>
       )}
-      { tokens?.assets.length > 0 && (
+      { tokens?.length > 0 && (
         <Table
           header={[]}
         >
-          { tokens.assets.map((token) => (
+          { tokens.map((token) => (
             <tr key={token.openseaLink}>
               <td className='overflow'>
                 <NftTokenCard

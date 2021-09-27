@@ -18,7 +18,6 @@ export {
 
 export { Web3 };
 
-
 /**
  * Example setup:
  *

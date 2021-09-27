@@ -10,7 +10,7 @@ import BN from 'bn.js';
 import { useCallback, useEffect, useRef, useState, useContext } from 'react';
 
 import { Filters } from '@polkadot/app-nft-market/containers/NftMarket';
-import { OpenSeaAPI, OpenSeaAPIConfig, OpenSeaCollection, Order, OpenSeaPort, Network , Web3, Contract } from 'opensea-js';
+import { OpenSeaAPI, OpenSeaAPIConfig, OpenSeaCollection, Order, OpenSeaPort, Network , Web3, Contract, OpenSeaAsset } from 'opensea-js';
 
 import envConfig from '@polkadot/apps-config/envConfig';
 import { useApi, useCollection, useFetch } from '@polkadot/react-hooks';
@@ -161,14 +161,15 @@ async function  transferFromBridge (txhash:string, whom:string, token:string,  i
       }, 
       useSkipCache: false
   };
-      // const provider = new Web3HttpProvider(endpoint2, options);
-      //const provider = new Web3WsProvider(endpoint2, options);
+  /*
+    const provider = new Web3HttpProvider(endpoint2, options);
+    const provider = new Web3WsProvider(endpoint2, options);
 
-    Contract.setProvider(endpoint2);
+     Contract.setProvider(endpoint2);
 
-    const pb2 = new Contract(BridgeGate.abi, contr2.pb);
+     const pb2 = new Contract(BridgeGate.abi, contr2.pb);
   
-  /*    const myAccount = contr2.account; //web3.eth.accounts.privateKeyToAccount(pk2);
+     const myAccount = contr2.account; //web3.eth.accounts.privateKeyToAccount(pk2);
     console.log ("asking about Tx:", txhash, "from: ", myAccount )
   const tranzactionIsNotDone = await pb2.methods.tranzactionIsNotDone(chain1, txhash).call({from: myAccount, gasPrice: '0x01', gas: '25000000000'}); 
   console.log ("tranzactionIsNotDone", tranzactionIsNotDone)
@@ -189,13 +190,14 @@ async function  transferFromBridge (txhash:string, whom:string, token:string,  i
       // ver Web3 API 0.20.7,  <1 
       const pb =  web3.eth.contract(BridgeGate.abi);
       const pb21 =  pb.at(contr2.pb);
-
+      const payload =  await pb21.transfer(chain1, txhash, whom, token,  idNFT, {from: accountAddress, gasPrice: '0x01'});
+      console.log (payload.tx);
      // ver Web3 API >1
 //    const pb21 = new web3.eth.Contract(BridgeGate.abi, contr2.pb, {from: accountAddress, gasPrice: '0x01'});
 
-      const payload =  await pb21.methods.transfer(chain1, txhash, whom, token,  idNFT).send({from: accountAddress, gasPrice: '0x01'})
-      console.log (payload)
-         var encodedABI = payload.encodeABI();
+      // const payload =  await pb21.methods.transfer(chain1, txhash, whom, token,  idNFT).send({from: accountAddress, gasPrice: '0x01'})
+      
+/*          var encodedABI = payload.encodeABI();
 
       var tx = {
         from: accountAddress,
@@ -219,7 +221,7 @@ async function  transferFromBridge (txhash:string, whom:string, token:string,  i
         });
     
         tran.on('error', console.error);
-      })
+      }) */
   }
 }
 
@@ -834,6 +836,7 @@ const mintOnUniq = useCallback(async (asset_contract_address: string, token_id: 
     myHold,
     // myTrades,
     offers,
+    OpenSeaAsset, 
     // offersCount,
     // offersLoading,
     presetCollections
